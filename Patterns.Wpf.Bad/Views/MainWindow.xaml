@@ -1,0 +1,120 @@
+﻿<Window x:Class="Patterns.Wpf.Bad.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Patterns.Wpf.Bad"
+        xmlns:vm="clr-namespace:Patterns.Wpf.Bad.ViewModels.Shapes"
+        mc:Ignorable="d"
+        Title="Bad WPF Patterns" Height="450" Width="800"
+        x:Name="MainWindowElement">
+    <Window.Resources>
+
+        <DropShadowEffect x:Key="CardShadowEffect"
+                      Color="Black"
+                      Direction="270"
+                      ShadowDepth="4"
+                      BlurRadius="10"
+                      Opacity="0.3" />
+
+        <Style x:Key="CardContainerStyle" TargetType="ContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <Border
+                        Background="White"
+                        CornerRadius="8"
+                        Padding="16"
+                        Margin="8"
+                        Effect="{StaticResource CardShadowEffect}"
+                        BorderBrush="Gray"
+                        BorderThickness="1">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type vm:RectangleViewModel}">
+            <ContentControl Style="{StaticResource CardContainerStyle}">
+                <Grid Width="100">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Rectangle
+                    Grid.Row="0"
+                    Width="{Binding Width}" 
+                    Height="{Binding Height}" 
+                    Fill="LightBlue" 
+                    Stroke="Black"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+                    <Button 
+                    Margin="8"
+                    Grid.Row="1"
+                    Content="Calc Area" 
+                    Command="{Binding DataContext.ButtonClickedCommand, ElementName=MainWindowElement}"
+                    CommandParameter="{Binding}"/>
+                    <TextBlock Grid.Row="2" Margin="8 0">
+                    <Run Text="Area:"></Run>
+                    <Run Text="{Binding Area}" />
+                    </TextBlock>
+                </Grid>
+            </ContentControl>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:CircleViewModel}">
+            <ContentControl Style="{StaticResource CardContainerStyle}">
+                <Grid Width="100">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Ellipse 
+                    Grid.Row="0"
+                    Width="{Binding Width}" 
+                    Height="{Binding Height}" 
+                    Fill="LightGreen" 
+                    Stroke="Black" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+                    <Button 
+                    Margin="8"
+                    Grid.Row="1"
+                    Content="Calc Area"  
+                    Command="{Binding DataContext.ButtonClickedCommand, ElementName=MainWindowElement}"
+                    CommandParameter="{Binding}"/>
+                    <TextBlock Grid.Row="2" Margin="8 0">
+                    <Run Text="Area:"/>
+                    <Run Text="{Binding Area}" />
+                    </TextBlock>
+                </Grid>
+            </ContentControl>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Content="Calculate All Areas"
+                Margin="8"
+                Width="200"
+                HorizontalAlignment="Left"
+                Command="{Binding CalculateAllAreasCommand}"/>
+        <ItemsControl Grid.Row="1"
+                      ItemsSource="{Binding Shapes}"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Center">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </Grid>
+</Window>
